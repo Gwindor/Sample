@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.serhiisolodilov">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.ShopListActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.ShopDetailActivity"
+            android:label="@string/title_shop_detail"
+            android:parentActivityName=".ui.ShopListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ShopListActivity" />
+        </activity>
+
+        <service
+            android:name=".service.MyService"
+            android:enabled="false"
+            android:exported="false" />
+
+        <provider
+            android:name=".db.contentproviders.ShopsContentProvider"
+            android:authorities="com.serhiisolodilov.TestApp.provider"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".service.MyIntentService"
+            android:exported="false"></service>
+    </application>
+
+</manifest>
