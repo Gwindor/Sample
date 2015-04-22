@@ -1,1 +1,3 @@
-# Sample architecture of application to connect UI, Database and Network operations.
+# Sample architecture for android applications. 
+
+This application connect UI, Database and Network operations.
