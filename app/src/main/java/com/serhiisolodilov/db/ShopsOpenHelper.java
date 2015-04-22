@@ -13,7 +13,7 @@ import com.serhiisolodilov.db.model.ShopEntry;
 public class ShopsOpenHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 39;
-    private static final String SHOPS_DB_NAME = "shops";
+    private static final String SHOPS_DB_NAME = "shops.db";
 
     private static ShopsOpenHelper instance;
 

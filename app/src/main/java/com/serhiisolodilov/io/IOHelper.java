@@ -49,30 +49,34 @@ public class IOHelper {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 if (httpEntity != null) {
                     InputStream inputStream = httpEntity.getContent();
-                    final JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-                    try {
-                        reader.beginArray();
-                        final List<Shop> shops = new ArrayList<Shop>();
-                        Shop shop;
-                        ContentResolver contentResolver = context.getContentResolver();
-                        while (reader.hasNext()) {
-                            shop = sGSON.fromJson(reader, Shop.class);
-                            shops.add(shop);
-                            if (shops.size() >= NUMBER_FOR_STORE_SHOPS) {
-                                saveShops(contentResolver, shops);
-                            }
-                        }
-                        if (shops.size() > 0) {
-                            saveShops(contentResolver, shops);
-                        }
-                    } finally {
-                        reader.close();
-                    }
+                    parseAndSaveShops(context, inputStream);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, e.getMessage() == null ? "null" : e.getMessage());
+        }
+    }
+
+    private static void parseAndSaveShops(Context context, InputStream inputStream) throws IOException {
+        final JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+        final List<Shop> shops = new ArrayList<>();
+        try {
+            reader.beginArray();
+            Shop shop;
+            ContentResolver contentResolver = context.getContentResolver();
+            while (reader.hasNext()) {
+                shop = sGSON.fromJson(reader, Shop.class);
+                shops.add(shop);
+                if (shops.size() >= NUMBER_FOR_STORE_SHOPS) {
+                    saveShops(contentResolver, shops);
+                }
+            }
+            if (shops.size() > 0) {
+                saveShops(contentResolver, shops);
+            }
+        } finally {
+            reader.close();
         }
     }
 
@@ -95,28 +99,7 @@ public class IOHelper {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 if (httpEntity != null) {
                     InputStream inputStream = httpEntity.getContent();
-                    final JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
-                    try {
-                        reader.beginArray();
-                        final List<InstrumentRoot> instruments = new ArrayList<InstrumentRoot>();
-                        InstrumentRoot instrument;
-                        ContentResolver contentResolver = context.getContentResolver();
-                        while (reader.hasNext()) {
-                            instrument = sGSON.fromJson(reader, InstrumentRoot.class);
-                            instruments.add(instrument);
-                            if (instruments.size() >= NUMBER_FOR_STORE_INSTRUMENTS) {
-                                saveInstruments(contentResolver, instruments, shopId);
-                                instruments.clear();
-                            }
-                        }
-                        if (instruments.size() > 0) {
-                            saveInstruments(contentResolver, instruments, shopId);
-                            instruments.clear();
-                        }
-                        reader.endArray();
-                    } finally {
-                        reader.close();
-                    }
+                    parseAndSaveInstruments(context, shopId, inputStream);
                 }
             }
         } catch (IOException e) {
@@ -124,6 +107,31 @@ public class IOHelper {
             Log.e(TAG, e.getMessage() == null ? "null" : e.getMessage());
         } finally {
             httpGet.abort();
+        }
+    }
+
+    private static void parseAndSaveInstruments(Context context, long shopId, InputStream inputStream) throws IOException {
+        final JsonReader reader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"));
+        try {
+            reader.beginArray();
+            final List<InstrumentRoot> instruments = new ArrayList<InstrumentRoot>();
+            InstrumentRoot instrument;
+            ContentResolver contentResolver = context.getContentResolver();
+            while (reader.hasNext()) {
+                instrument = sGSON.fromJson(reader, InstrumentRoot.class);
+                instruments.add(instrument);
+                if (instruments.size() >= NUMBER_FOR_STORE_INSTRUMENTS) {
+                    saveInstruments(contentResolver, instruments, shopId);
+                    instruments.clear();
+                }
+            }
+            if (instruments.size() > 0) {
+                saveInstruments(contentResolver, instruments, shopId);
+                instruments.clear();
+            }
+            reader.endArray();
+        } finally {
+            reader.close();
         }
     }
 

@@ -20,16 +20,16 @@ public class ShopsContentProvider extends ContentProvider {
 
     public static final String AUTHORITY = "com.serhiisolodilov.TestApp.provider";
 
-    public static final Uri SHOPS_CONTENT_URI = Uri.parse("content://"
-            + AUTHORITY + "/" + ShopEntry.TABLE_NAME);
-    public static final Uri INSTRUMENTS_CONTENT_URI = Uri.parse("content://"
-            + AUTHORITY + "/" + InstrumentEntry.TABLE_NAME);
+    public static final Uri SHOPS_CONTENT_URI = Uri.parse(
+            "content://" + AUTHORITY + "/" + ShopEntry.TABLE_NAME);
+    public static final Uri INSTRUMENTS_CONTENT_URI = Uri.parse(
+            "content://" + AUTHORITY + "/" + InstrumentEntry.TABLE_NAME);
 
-    private static final int SHOP = 1;
-    private static final int SHOP_ID = 2;
+    private static final int SHOP = 101;
+    private static final int SHOP_ID = 102;
 
-    private static final int INSTRUMENT = 3;
-    private static final int INSTRUMENT_ID = 4;
+    private static final int INSTRUMENT = 201;
+    private static final int INSTRUMENT_ID = 202;
 
     private final UriMatcher mUriMatcher;
 
@@ -95,7 +95,7 @@ public class ShopsContentProvider extends ContentProvider {
         sqLiteDatabase.beginTransaction();
         try {
             long rowId;
-            List<Uri> uris = new ArrayList<Uri>();
+            List<Uri> uris = new ArrayList<>();
             for (ContentValues contentValues : values) {
                 rowId = sqLiteDatabase.insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
                 uris.add(ContentUris.withAppendedId(contentUri, rowId));
